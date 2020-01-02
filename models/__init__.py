@@ -19,6 +19,7 @@ See our template model class 'template_model.py' for more details.
 """
 
 import importlib
+import torch.nn as nn
 from models.base_model import BaseModel
 
 
@@ -62,6 +63,7 @@ def create_model(opt):
         >>> model = create_model(opt)
     """
     model = find_model_using_name(opt.model)
+    model = nn.DataParallel(model) #enabling data parallelism
     instance = model(opt)
     print("model [%s] was created" % type(instance).__name__)
     return instance
