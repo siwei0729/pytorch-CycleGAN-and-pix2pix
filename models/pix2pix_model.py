@@ -78,8 +78,8 @@ class Pix2PixModel(BaseModel):
             # print(self.device)
             # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
             # model = nn.DataParallel(model)
-            self.netG = nn.DataParallel(self.netG)
-            self.netD = nn.DataParallel(self.netD)
+            # self.netG = nn.DataParallel(self.netG)
+            # self.netD = nn.DataParallel(self.netD)
             # self.criterionGAN = nn.DataParallel(self.criterionGAN)
             # self.criterionL1 = nn.DataParallel(self.criterionL1)
 
