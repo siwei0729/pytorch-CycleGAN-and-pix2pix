@@ -80,8 +80,8 @@ class Pix2PixModel(BaseModel):
             # model = nn.DataParallel(model)
             self.netG = nn.DataParallel(self.netG)
             self.netD = nn.DataParallel(self.netD)
-            self.criterionGAN = nn.DataParallel(self.criterionGAN)
-            self.criterionL1 = nn.DataParallel(self.criterionL1)
+            # self.criterionGAN = nn.DataParallel(self.criterionGAN)
+            # self.criterionL1 = nn.DataParallel(self.criterionL1)
 
     def set_input(self, input):
         """Unpack input data from the dataloader and perform necessary pre-processing steps.
