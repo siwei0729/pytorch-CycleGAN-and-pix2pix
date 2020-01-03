@@ -20,6 +20,7 @@ See our template model class 'template_model.py' for more details.
 
 import importlib
 from models.base_model import BaseModel
+import torch
 
 
 def find_model_using_name(model_name):
@@ -63,5 +64,6 @@ def create_model(opt):
     """
     model = find_model_using_name(opt.model)
     instance = model(opt)
+    instance = torch.nn.DataParallel(instance)
     print("model [%s] was created" % type(instance).__name__)
     return instance
