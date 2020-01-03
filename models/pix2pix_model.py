@@ -64,6 +64,7 @@ class Pix2PixModel(BaseModel):
 
         if torch.cuda.device_count() > 1:
             print("Let's use", torch.cuda.device_count(), "GPUs!")
+            # print(self.device)
             # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
             # model = nn.DataParallel(model)
             self.netG = nn.DataParallel(self.netG)
