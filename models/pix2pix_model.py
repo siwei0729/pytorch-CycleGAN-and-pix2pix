@@ -70,8 +70,12 @@ class Pix2PixModel(BaseModel):
             self.optimizers.append(self.optimizer_G)
             self.optimizers.append(self.optimizer_D)
 
-        # self.netG = nn.DataParallel(self.netG) #enabling data parallelism
-        # self.netD = nn.DataParallel(self.netD) #enabling data parallelism
+        if torch.cuda.device_count() > 1:
+            print("Let's use", torch.cuda.device_count(), "GPUs!")
+            # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
+            # model = nn.DataParallel(model)
+            self.netG = nn.DataParallel(self.netG) #enabling data parallelism
+            self.netD = nn.DataParallel(self.netD) #enabling data parallelism
 
     def set_input(self, input):
         """Unpack input data from the dataloader and perform necessary pre-processing steps.
