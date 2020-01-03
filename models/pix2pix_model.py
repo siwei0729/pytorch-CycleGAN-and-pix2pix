@@ -62,26 +62,26 @@ class Pix2PixModel(BaseModel):
             self.netD = networks.define_D(opt.input_nc + opt.output_nc, opt.ndf, opt.netD,
                                           opt.n_layers_D, opt.norm, opt.init_type, opt.init_gain, self.gpu_ids)
 
-        if torch.cuda.device_count() > 1:
-            print("Let's use", torch.cuda.device_count(), "GPUs!")
-            # self.device = torch.device('cuda :0,1' if torch.cuda.is_available() else 'cpu')
-            # print(self.device)
-            # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
-            # model = nn.DataParallel(model)
-            self.netG = nn.DataParallel(self.netG)
-            self.netD = nn.DataParallel(self.netD)
-
         if self.isTrain:
             # define loss functions
-            GANLoss = networks.GANLoss(opt.gan_mode)
-            GANLoss = nn.DataParallel(GANLoss)
-            self.criterionGAN = GANLoss.to(self.device)
+            self.criterionGAN = networks.GANLoss(opt.gan_mode).to(self.device)
             self.criterionL1 = torch.nn.L1Loss()
             # initialize optimizers; schedulers will be automatically created by function <BaseModel.setup>.
             self.optimizer_G = torch.optim.Adam(self.netG.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
             self.optimizer_D = torch.optim.Adam(self.netD.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
             self.optimizers.append(self.optimizer_G)
             self.optimizers.append(self.optimizer_D)
+
+        if torch.cuda.device_count() > 1:
+            print("Let's use", torch.cuda.device_count(), "GPUs!")
+            # device = torch.device('cuda :0,1' if torch.cuda.is_available() else 'cpu')
+            # print(self.device)
+            # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
+            # model = nn.DataParallel(model)
+            self.netG = nn.DataParallel(self.netG)
+            self.netD = nn.DataParallel(self.netD)
+            self.criterionGAN = nn.DataParallel(self.criterionGAN)
+            self.criterionL1 = nn.DataParallel(self.criterionL1)
 
     def set_input(self, input):
         """Unpack input data from the dataloader and perform necessary pre-processing steps.
