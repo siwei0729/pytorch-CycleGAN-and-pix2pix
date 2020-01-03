@@ -64,6 +64,7 @@ class Pix2PixModel(BaseModel):
 
         if torch.cuda.device_count() > 1:
             print("Let's use", torch.cuda.device_count(), "GPUs!")
+            # self.device = torch.device('cuda :0,1' if torch.cuda.is_available() else 'cpu')
             # print(self.device)
             # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
             # model = nn.DataParallel(model)
@@ -72,7 +73,9 @@ class Pix2PixModel(BaseModel):
 
         if self.isTrain:
             # define loss functions
-            self.criterionGAN = networks.GANLoss(opt.gan_mode).to(self.device)
+            GANLoss = networks.GANLoss(opt.gan_mode)
+            GANLoss = nn.DataParallel(GANLoss)
+            self.criterionGAN = GANLoss.to(self.device)
             self.criterionL1 = torch.nn.L1Loss()
             # initialize optimizers; schedulers will be automatically created by function <BaseModel.setup>.
             self.optimizer_G = torch.optim.Adam(self.netG.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
